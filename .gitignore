@@ -1,0 +1,10 @@
+# Ignore large files
+data/raw/
+data/processed/
+models/*.joblib
+models/*.h5
+models/*.keras
+
+# Ignore virtual env
+.venv/
+__pycache__/
