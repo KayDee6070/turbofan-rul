@@ -1,3 +1,14 @@
+<p align="center">
+  <img src="banner.png" alt="NASA Turbofan RUL Project Banner" width="100%">
+</p>
+
+<h1 align="center">🚀 NASA Turbofan Engine RUL Prediction (FD001)</h1>
+<p align="center">
+  End-to-end Machine Learning & Deep Learning pipeline for Predictive Maintenance.<br>
+  <strong>By Kuntal (KayDee6070)</strong>
+</p>
+
+
 # NASA Turbofan Engine RUL Prediction (FD001)
 
 **Goal:** Predict the Remaining Useful Life (RUL) of aircraft engines using NASA’s CMAPSS dataset.
