@@ -9,94 +9,156 @@
 </p>
 
 
-# NASA Turbofan Engine RUL Prediction (FD001)
+# NASA Turbofan Engine Remaining Useful Life (RUL) Prediction
 
-**Goal:** Predict the Remaining Useful Life (RUL) of aircraft engines using NASA’s CMAPSS dataset.
-
----
-
-## Overview
-
-This project demonstrates a complete **end-to-end Machine Learning workflow** for predictive maintenance:
-
-1. **Data ingestion** — Load CMAPSS FD001 data (train/test/RUL files)
-2. **Feature engineering** — Rolling means, standard deviations, lags, and deltas per sensor
-3. **Model training** — Random Forest, XGBoost, and LSTM
-4. **Evaluation** — MAE and RMSE metrics
-5. **Visualization** — Sensor correlations, feature importance, RUL vs. cycle plots
-6. **Reporting** — Automatic PDF report with results and comparison chart
+This project focuses on **predicting the Remaining Useful Life (RUL)** of jet engines using the **NASA CMAPSS dataset**.  
+It combines **classical machine learning (Random Forest, XGBoost)** and **deep learning (LSTM)** to develop predictive maintenance models for turbofan engines.
 
 ---
 
-## Project Structure
+## 📘 Project Overview
+
+The goal of this project is to estimate how many operating cycles remain before an engine fails.  
+We use the **FD001 dataset** from NASA's CMAPSS (Commercial Modular Aero-Propulsion System Simulation) data.
+
+The workflow follows a standard machine learning pipeline:
+
+1. **Data Acquisition** → NASA CMAPSS datasets  
+2. **Data Preprocessing** → Sensor normalization, feature engineering, and RUL capping  
+3. **Model Training** → RandomForest, XGBoost, and LSTM  
+4. **Evaluation** → MAE and RMSE comparison  
+5. **Visualization & Reporting** → Streamlit dashboard and model report  
+6. **Deployment** → Local or online interactive app (Streamlit)
+
+---
+
+## ⚙️ Model Training Summary
+
+| Model                        | MAE   | RMSE  |
+|------------------------------|-------|-------|
+| RandomForest (all cycles)    | 11.97 | 16.64 |
+| RandomForest (last cycle)    | 13.06 | 18.40 |
+| XGBoost (all cycles)         | 11.63 | 16.01 |
+| XGBoost (last cycle)         | 12.63 | 17.56 |
+| LSTM (deep learning)         | 29.68 | 36.63 |
+
+> **Observation:**  
+> XGBoost (all cycles) achieved the lowest RMSE, indicating it provides the most stable and accurate predictions for this dataset.
+
+---
+
+## 📊 Model Performance Visualization
+
+Below is a high-resolution comparison of RMSE across all models (lower = better):
+
+<p align="center">
+  <img src="models/FD001_comparison.png" alt="Model RMSE Comparison" width="600"/>
+</p>
+
+The highlighted blue bar indicates the **best performing model** (XGBoost on all cycles).
+
+---
+
+## 🧠 Streamlit Application
+
+An interactive web app is included to explore and visualize predictions.
+
+### Launch locally
+
+```bash
+streamlit run src/app_rul_streamlit.py
+```
+
+### App Features
+- Upload preprocessed test data (`FD001_test.csv`)
+- Choose model: RandomForest, XGBoost, or LSTM
+- Predict Remaining Useful Life (RUL)
+- Visualize results dynamically
+
+---
+
+## 📁 Project Structure
 
 ```
 turbofan-rul/
-├── data/
-│   ├── raw/              # NASA CMAPSS text files
-│   └── processed/        # Engineered features
-├── models/
-│   ├── FD001_rf.joblib
-│   ├── FD001_xgb.joblib
-│   ├── FD001_lstm.h5
+│
+├── archive/                   # NASA CMAPSS datasets
+├── data/processed/            # Preprocessed CSVs
+├── models/                    # Trained models + report
+│   ├── FD001_model_report.pdf
 │   ├── FD001_comparison.png
-│   └── FD001_model_report.pdf
+│   └── *.joblib / *.h5
+│
 ├── src/
-│   ├── data_prep.py
-│   ├── train_baseline.py
-│   ├── train_lstm.py
-│   ├── eda_feature_importance.py
-│   └── model_report.py
+│   ├── data_prep.py           # Data preprocessing
+│   ├── train_baseline.py      # ML model training
+│   ├── train_lstm.py          # LSTM model training
+│   ├── model_report.py        # Generates report and plots
+│   └── app_rul_streamlit.py   # Streamlit dashboard
+│
 └── README.md
 ```
 
 ---
 
-## Model Comparison Results
+## 🧩 Requirements
 
-| Model | MAE | RMSE |
-|:------|:----:|:----:|
-| RandomForest (all cycles) | **11.97** | **16.64** |
-| RandomForest (last cycle) | 13.06 | 18.40 |
-| XGBoost (all cycles) | **11.63** | **16.01** |
-| XGBoost (last cycle) | 12.63 | 17.56 |
-| LSTM (deep learning) | 29.68 | 36.63 |
+Create a virtual environment and install dependencies:
 
-![RMSE Comparison](models/FD001_comparison.png)
-
----
-
-## Key Insights
-- **Tree-based models** perform best with engineered features (RMSE ≈ 16).  
-- **LSTM** learns temporal degradation trends and can improve with tuning.  
-- **Top predictive sensors:** `s4`, `s9`, `s11`.  
-- Demonstrates an **industry-ready predictive maintenance workflow**.
-
----
-
-## Full Report
-A detailed PDF report (with metrics and visual comparisons) is available in:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 ```
-models/FD001_model_report.pdf
+
+Key packages:
+```
+pandas
+numpy
+scikit-learn
+xgboost
+tensorflow
+keras
+matplotlib
+seaborn
+streamlit
+joblib
 ```
 
 ---
 
-## Tech Stack
-- Python, Pandas, NumPy, Matplotlib, Seaborn  
-- Scikit-learn, XGBoost, TensorFlow/Keras  
-- ReportLab for automatic PDF report generation
+## 📄 Model Report Example
+
+A detailed model comparison PDF is automatically generated:
+
+- Location: `models/FD001_model_report.pdf`  
+- Includes metrics table + RMSE visualization
 
 ---
 
-## Author
-**Kuntal (KayDee6070)**  
-Machine Learning & Data Engineering Projects Portfolio  
-[GitHub Profile](https://github.com/KayDee6070)
+## 🔍 Future Enhancements
 
----
-
-## Next Steps
+- Add **SHAP** interpretability for model explainability  
 - Extend to FD002–FD004 datasets  
-- Tune LSTM hyperparameters and sequence length  
-- Deploy the model using Streamlit or FastAPI
+- Integrate real-time RUL prediction API  
+- Add uncertainty quantification (UQ) and calibration metrics  
+
+---
+
+## 🧑‍💻 Author
+
+**Kuntal Dive (KayDee6070)**  
+MSc Digital Engineering, Bauhaus-Universität Weimar  
+Project Mentor: Self-led applied ML study on Predictive Maintenance  
+Repository: [github.com/KayDee6070/turbofan-rul](https://github.com/KayDee6070/turbofan-rul)
+
+---
+
+## 📬 Citation
+
+If you use this project or its structure in your own work, please cite:
+
+> Kuntal Dive, *"NASA Turbofan Engine RUL Prediction using ML and LSTM"*, 2025.
+
+---
+

@@ -1,106 +1,87 @@
-# src/model_report.py
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from math import sqrt
-from joblib import load
-from tensorflow.keras.models import load_model
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
+from keras.models import load_model
 
+# === Configuration ===
 FD = "FD001"
-DATA_DIR = "data/processed"
 MODELS_DIR = "models"
-REPORT_PATH = f"{MODELS_DIR}/{FD}_model_report.pdf"
+OUT_PATH = os.path.join(MODELS_DIR, f"{FD}_model_report.pdf")
 
-# --------- Load metrics from baselines ----------
-metrics_csv = os.path.join(MODELS_DIR, f"{FD}_baseline_metrics.csv")
-baseline_df = pd.read_csv(metrics_csv)
+# === Styling for professional plots ===
+plt.style.use("seaborn-v0_8-darkgrid")
+plt.rcParams.update({
+    "font.size": 12,
+    "axes.titlesize": 14,
+    "axes.labelsize": 12,
+    "xtick.labelsize": 10,
+    "ytick.labelsize": 10,
+    "figure.titlesize": 16,
+    "font.family": "sans-serif",
+    "font.sans-serif": ["DejaVu Sans", "Arial"],
+    "axes.labelcolor": "black",
+    "text.color": "black"
+})
 
-# --------- Evaluate LSTM again on test ----------
-import numpy as np
-test = pd.read_csv(os.path.join(DATA_DIR, f"{FD}_test_features.csv"))
-selected_feats = ["s4_mean5","s9_mean5","s11_mean5","s9_mean20","s14_mean20"]
+# === Load metrics data ===
+metrics_path = os.path.join(MODELS_DIR, f"{FD}_baseline_metrics.csv")
+df_metrics = pd.read_csv(metrics_path)
+print(df_metrics)
 
-# load scaler if you saved it; otherwise re-scale inline
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-test[selected_feats] = scaler.fit_transform(test[selected_feats])
+# === Display model comparison results ===
+print("\n=== Model Comparison Results ===")
+print(df_metrics[["model", "MAE", "RMSE"]])
 
-def make_sequences(df, seq_len=30):
-    X, y = [], []
-    for _, g in df.groupby("unit"):
-        data = g[selected_feats + ["RUL"]].values
-        for i in range(len(data) - seq_len):
-            X.append(data[i:i+seq_len, :-1])
-            y.append(data[i+seq_len, -1])
-    return np.array(X), np.array(y)
+# === Plot RMSE Comparison ===
+plt.figure(figsize=(8, 5))
+bars = plt.bar(df_metrics["model"], df_metrics["RMSE"], color="steelblue", alpha=0.8)
+plt.title("Model RMSE Comparison (lower = better)", pad=15, weight="bold")
+plt.xlabel("Model", labelpad=10)
+plt.ylabel("RMSE", labelpad=10)
+plt.xticks(rotation=20, ha="right")
 
-X_test, y_test = make_sequences(test)
+# Highlight the best model
+min_rmse_idx = df_metrics["RMSE"].idxmin()
+bars[min_rmse_idx].set_color("dodgerblue")
 
-lstm_model = load_model(os.path.join(MODELS_DIR, f"{FD}_lstm.h5"), compile=False)
-preds = lstm_model.predict(X_test).flatten()
-mae = mean_absolute_error(y_test, preds)
-rmse = sqrt(mean_squared_error(y_test, preds))
-
-lstm_df = pd.DataFrame([{
-    "model": "LSTM",
-    "MAE": mae,
-    "RMSE": rmse
-}])
-
-# Combine all
-all_results = pd.concat([baseline_df, lstm_df], ignore_index=True)
-print(all_results)
-
-# --------- Plot comparison ---------
-plt.figure(figsize=(6,4))
-plt.bar(all_results["model"], all_results["RMSE"], color=["gray","gray","steelblue"])
-plt.title("Model RMSE Comparison (lower = better)")
-plt.ylabel("RMSE")
-plt.tight_layout()
+# Save high-resolution comparison chart
 plot_path = os.path.join(MODELS_DIR, f"{FD}_comparison.png")
-plt.savefig(plot_path)
+plt.tight_layout()
+plt.savefig(plot_path, dpi=300, bbox_inches="tight")
 plt.close()
 
-# --------- Generate PDF ---------
-styles = getSampleStyleSheet()
-doc = SimpleDocTemplate(REPORT_PATH)
-story = []
+# === Optionally load LSTM for verification ===
+try:
+    lstm_model = load_model(os.path.join(MODELS_DIR, f"{FD}_lstm.h5"))
+    print("[INFO] LSTM model loaded successfully.")
+except Exception as e:
+    print(f"[WARN] Could not load LSTM model: {e}")
 
-story.append(Paragraph("<b>NASA Turbofan Engine RUL Prediction</b>", styles["Title"]))
-story.append(Spacer(1,12))
-story.append(Paragraph("Project Summary:", styles["Heading2"]))
-story.append(Paragraph(
-    "This project predicts the Remaining Useful Life (RUL) of aircraft engines using NASA's CMAPSS dataset (FD001). "
-    "Three models were compared: Random Forest, XGBoost, and an LSTM sequence model. "
-    "Data preprocessing included rolling/lag feature engineering and RUL labeling.",
-    styles["Normal"]
-))
-story.append(Spacer(1,12))
+# === Export results summary to PDF ===
+from matplotlib.backends.backend_pdf import PdfPages
 
-story.append(Paragraph("Model Performance Summary:", styles["Heading2"]))
-table_data = [["Model","MAE","RMSE"]] + all_results.round(3).values.tolist()
-t = Table(table_data, hAlign='LEFT')
-t.setStyle(TableStyle([
-    ("BACKGROUND",(0,0),(-1,0),colors.grey),
-    ("TEXTCOLOR",(0,0),(-1,0),colors.whitesmoke),
-    ("ALIGN",(0,0),(-1,-1),"CENTER"),
-    ("GRID",(0,0),(-1,-1),0.5,colors.black),
-]))
-story.append(t)
-story.append(Spacer(1,12))
+pdf_path = os.path.join(MODELS_DIR, f"{FD}_model_report.pdf")
+with PdfPages(pdf_path) as pdf:
+    # Summary Table
+    fig, ax = plt.subplots(figsize=(8, 2))
+    ax.axis("tight")
+    ax.axis("off")
+    table = ax.table(
+        cellText=df_metrics.round(2).values,
+        colLabels=df_metrics.columns,
+        loc="center"
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1.2, 1.5)
+    plt.title("Model Comparison Results", fontsize=14, weight="bold", pad=10)
+    pdf.savefig(fig, bbox_inches="tight")
 
-story.append(Paragraph("RMSE Comparison Chart:", styles["Heading2"]))
-story.append(Image(plot_path, width=400, height=300))
+    # RMSE Comparison Chart
+    img = plt.imread(plot_path)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.imshow(img)
+    ax.axis("off")
+    pdf.savefig(fig, bbox_inches="tight")
 
-story.append(Spacer(1,12))
-story.append(Paragraph(
-    "The LSTM model captures temporal degradation trends, while tree-based models provide strong baselines. "
-    "Future work could include multi-sensor attention models or multi-fleet domain adaptation.",
-    styles["Normal"]
-))
-doc.build(story)
-print(f"[INFO] Report saved to {REPORT_PATH}")
+print(f"[INFO] Report saved to {pdf_path}")
