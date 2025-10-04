@@ -1,0 +1,17 @@
+# Handle line endings consistently across systems
+* text=auto
+
+# Explicitly set for common file types
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+
+# Binary files (no conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary
+*.h5 binary
+*.joblib binary
