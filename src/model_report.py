@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import textwrap
 from tensorflow.keras.models import load_model
 from joblib import load
 
@@ -19,7 +20,24 @@ print("[INFO] Loading models...")
 
 rf_model = load(os.path.join(MODELS_DIR, f"{FD}_rf.joblib"))
 xgb_model = load(os.path.join(MODELS_DIR, f"{FD}_xgb.joblib"))
-lstm_model = load_model(os.path.join(MODELS_DIR, f"{FD}_lstm.h5"))
+from tensorflow.keras.losses import MeanSquaredError
+
+try:
+    lstm_model = load_model(
+        os.path.join(MODELS_DIR, f"{FD}_lstm.h5"),
+        compile=False  # skip recompiling to avoid legacy issues
+    )
+    print("[INFO] LSTM model loaded (compile=False).")
+except Exception as e:
+    print(f"[WARNING] Could not load LSTM model normally: {e}")
+    print("[INFO] Attempting custom deserialization fix...")
+    lstm_model = load_model(
+        os.path.join(MODELS_DIR, f"{FD}_lstm.h5"),
+        custom_objects={"mse": MeanSquaredError()},
+        compile=False
+    )
+    print("[INFO] LSTM model loaded successfully with custom deserialization.")
+
 
 # -------------------------------------------------
 # LOAD METRICS
@@ -31,28 +49,44 @@ print("\n=== Model Comparison Results ===")
 print(results_df)
 
 # -------------------------------------------------
-# PLOT: MODEL RMSE COMPARISON
+# PLOT: MODEL RMSE COMPARISON (FINAL VERSION)
 # -------------------------------------------------
-sns.set(style="whitegrid")
-plt.figure(figsize=(10, 6))
-sns.barplot(
-    x="model",
+sns.set_theme(style="whitegrid", font_scale=1.2)
+
+plt.figure(figsize=(14, 7))
+
+# Wrap long labels cleanly across multiple lines
+wrapped_labels = [
+    '\n'.join(textwrap.wrap(label, width=12)) for label in results_df["model"]
+]
+
+# Bar plot with highlight for best model
+bars = sns.barplot(
+    x=wrapped_labels,
     y="RMSE",
     data=results_df,
-    palette=["gray" if m != "XGBoost (all cycles)" else "steelblue" for m in results_df["model"]]
+    palette=["#888888" if m != "XGBoost (all cycles)" else "#1f77b4" for m in results_df["model"]],
 )
 
-plt.title("Model RMSE Comparison (lower = better)", fontsize=14, weight="bold")
-plt.ylabel("RMSE", fontsize=12)
-plt.xlabel("")
-plt.xticks(rotation=25, ha="right", fontsize=10)
+# Add RMSE values above bars
+for i, v in enumerate(results_df["RMSE"]):
+    bars.text(i, v + 0.8, f"{v:.2f}", color="black", ha="center", fontsize=10, fontweight="medium")
+
+# Styling
+plt.title("Model RMSE Comparison (lower = better)", fontsize=16, weight="bold", pad=20)
+plt.ylabel("RMSE", fontsize=13, labelpad=12)
+plt.xlabel("", fontsize=12)
+plt.xticks(rotation=0, ha="center", fontsize=11, linespacing=1.5)
+plt.yticks(fontsize=11)
+plt.grid(True, axis="y", linestyle="--", alpha=0.5)
 plt.tight_layout()
 
+# Save figure in high resolution
 comparison_path = os.path.join(MODELS_DIR, f"{FD}_comparison.png")
-plt.savefig(comparison_path, dpi=300)
+plt.savefig(comparison_path, dpi=400, bbox_inches="tight")
 plt.close()
 
-print(f"[INFO] Saved RMSE comparison chart to {comparison_path}")
+print(f"[INFO] Saved cleaned RMSE comparison chart to {comparison_path}")
 
 # -------------------------------------------------
 # SAVE REPORT TO PDF (OPTIONAL)
@@ -70,7 +104,7 @@ try:
     elements.append(Paragraph("Model Comparison Report", styles["Title"]))
     elements.append(Spacer(1, 20))
 
-    # Add table data
+    # Add table
     table_html = results_df.to_html(index=False)
     elements.append(Paragraph("Model Performance Summary:", styles["Heading2"]))
     elements.append(Paragraph(table_html, styles["Normal"]))
