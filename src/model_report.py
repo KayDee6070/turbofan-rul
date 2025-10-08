@@ -1,87 +1,92 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from keras.models import load_model
+import seaborn as sns
+from tensorflow.keras.models import load_model
+from joblib import load
 
-# === Configuration ===
-FD = "FD001"
+# -------------------------------------------------
+# CONFIG
+# -------------------------------------------------
 MODELS_DIR = "models"
-OUT_PATH = os.path.join(MODELS_DIR, f"{FD}_model_report.pdf")
+DATA_DIR = "data/processed"
+FD = "FD001"
 
-# === Styling for professional plots ===
-plt.style.use("seaborn-v0_8-darkgrid")
-plt.rcParams.update({
-    "font.size": 12,
-    "axes.titlesize": 14,
-    "axes.labelsize": 12,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
-    "figure.titlesize": 16,
-    "font.family": "sans-serif",
-    "font.sans-serif": ["DejaVu Sans", "Arial"],
-    "axes.labelcolor": "black",
-    "text.color": "black"
-})
+# -------------------------------------------------
+# LOAD MODELS
+# -------------------------------------------------
+print("[INFO] Loading models...")
 
-# === Load metrics data ===
-metrics_path = os.path.join(MODELS_DIR, f"{FD}_baseline_metrics.csv")
-df_metrics = pd.read_csv(metrics_path)
-print(df_metrics)
+rf_model = load(os.path.join(MODELS_DIR, f"{FD}_rf.joblib"))
+xgb_model = load(os.path.join(MODELS_DIR, f"{FD}_xgb.joblib"))
+lstm_model = load_model(os.path.join(MODELS_DIR, f"{FD}_lstm.h5"))
 
-# === Display model comparison results ===
+# -------------------------------------------------
+# LOAD METRICS
+# -------------------------------------------------
+results_df = pd.read_csv(os.path.join(MODELS_DIR, f"{FD}_baseline_metrics.csv"))
+results_df.columns = ["model", "MAE", "RMSE"]
+
 print("\n=== Model Comparison Results ===")
-print(df_metrics[["model", "MAE", "RMSE"]])
+print(results_df)
 
-# === Plot RMSE Comparison ===
-plt.figure(figsize=(8, 5))
-bars = plt.bar(df_metrics["model"], df_metrics["RMSE"], color="steelblue", alpha=0.8)
-plt.title("Model RMSE Comparison (lower = better)", pad=15, weight="bold")
-plt.xlabel("Model", labelpad=10)
-plt.ylabel("RMSE", labelpad=10)
-plt.xticks(rotation=20, ha="right")
+# -------------------------------------------------
+# PLOT: MODEL RMSE COMPARISON
+# -------------------------------------------------
+sns.set(style="whitegrid")
+plt.figure(figsize=(10, 6))
+sns.barplot(
+    x="model",
+    y="RMSE",
+    data=results_df,
+    palette=["gray" if m != "XGBoost (all cycles)" else "steelblue" for m in results_df["model"]]
+)
 
-# Highlight the best model
-min_rmse_idx = df_metrics["RMSE"].idxmin()
-bars[min_rmse_idx].set_color("dodgerblue")
-
-# Save high-resolution comparison chart
-plot_path = os.path.join(MODELS_DIR, f"{FD}_comparison.png")
+plt.title("Model RMSE Comparison (lower = better)", fontsize=14, weight="bold")
+plt.ylabel("RMSE", fontsize=12)
+plt.xlabel("")
+plt.xticks(rotation=25, ha="right", fontsize=10)
 plt.tight_layout()
-plt.savefig(plot_path, dpi=300, bbox_inches="tight")
+
+comparison_path = os.path.join(MODELS_DIR, f"{FD}_comparison.png")
+plt.savefig(comparison_path, dpi=300)
 plt.close()
 
-# === Optionally load LSTM for verification ===
+print(f"[INFO] Saved RMSE comparison chart to {comparison_path}")
+
+# -------------------------------------------------
+# SAVE REPORT TO PDF (OPTIONAL)
+# -------------------------------------------------
 try:
-    lstm_model = load_model(os.path.join(MODELS_DIR, f"{FD}_lstm.h5"))
-    print("[INFO] LSTM model loaded successfully.")
-except Exception as e:
-    print(f"[WARN] Could not load LSTM model: {e}")
+    from reportlab.lib.pagesizes import A4
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+    from reportlab.lib.styles import getSampleStyleSheet
 
-# === Export results summary to PDF ===
-from matplotlib.backends.backend_pdf import PdfPages
+    report_path = os.path.join(MODELS_DIR, f"{FD}_model_report.pdf")
+    doc = SimpleDocTemplate(report_path, pagesize=A4)
+    styles = getSampleStyleSheet()
+    elements = []
 
-pdf_path = os.path.join(MODELS_DIR, f"{FD}_model_report.pdf")
-with PdfPages(pdf_path) as pdf:
-    # Summary Table
-    fig, ax = plt.subplots(figsize=(8, 2))
-    ax.axis("tight")
-    ax.axis("off")
-    table = ax.table(
-        cellText=df_metrics.round(2).values,
-        colLabels=df_metrics.columns,
-        loc="center"
-    )
-    table.auto_set_font_size(False)
-    table.set_fontsize(10)
-    table.scale(1.2, 1.5)
-    plt.title("Model Comparison Results", fontsize=14, weight="bold", pad=10)
-    pdf.savefig(fig, bbox_inches="tight")
+    elements.append(Paragraph("Model Comparison Report", styles["Title"]))
+    elements.append(Spacer(1, 20))
 
-    # RMSE Comparison Chart
-    img = plt.imread(plot_path)
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.imshow(img)
-    ax.axis("off")
-    pdf.savefig(fig, bbox_inches="tight")
+    # Add table data
+    table_html = results_df.to_html(index=False)
+    elements.append(Paragraph("Model Performance Summary:", styles["Heading2"]))
+    elements.append(Paragraph(table_html, styles["Normal"]))
+    elements.append(Spacer(1, 20))
 
-print(f"[INFO] Report saved to {pdf_path}")
+    elements.append(Paragraph("Model RMSE Comparison (lower = better):", styles["Heading2"]))
+    elements.append(Image(comparison_path, width=450, height=300))
+    elements.append(Spacer(1, 12))
+
+    doc.build(elements)
+    print(f"[INFO] PDF report saved to {report_path}")
+
+except ImportError:
+    print("[WARNING] reportlab not installed. Skipping PDF generation.")
+
+# -------------------------------------------------
+# END
+# -------------------------------------------------
+print("\n[INFO] Model report generation complete.")
