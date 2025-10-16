@@ -1,0 +1,335 @@
+2025-10-15 23:12:30,405 - [INFO] - App started.
+2025-10-15 23:12:33,791 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:12:34,280 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-15 23:13:08,349 - [INFO] - App started.
+2025-10-15 23:14:04,303 - [INFO] - App started.
+2025-10-15 23:14:05,723 - [INFO] - App started.
+2025-10-15 23:14:07,837 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:14:08,284 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:14:08,447 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:14:29,378 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:14:29,393 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:14:37,013 - [INFO] - App started.
+2025-10-15 23:14:40,267 - [ERROR] - Error during prediction:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 178, in <module>
+    st.download_button(
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py", line 408, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\elements\widgets\button.py", line 362, in download_button
+    return self._download_button(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\elements\widgets\button.py", line 641, in _download_button
+    button_state = register_widget(
+                   ^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\state\widgets.py", line 169, in register_widget
+    return register_widget_from_metadata(metadata, ctx, widget_func_name, element_type)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\state\widgets.py", line 222, in register_widget_from_metadata
+    return ctx.session_state.register_widget(metadata, user_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\state\safe_session_state.py", line 55, in register_widget
+    self._yield_callback()
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 379, in _maybe_handle_execution_control_request
+    raise StopException()
+streamlit.runtime.scriptrunner.exceptions.StopException
+2025-10-15 23:14:53,428 - [INFO] - App started.
+2025-10-15 23:14:54,858 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:14:55,331 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:14:55,476 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:15:06,065 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:15:06,079 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:15:09,214 - [ERROR] - Error during prediction:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 552, in _to_bytes
+    reduce_data = obj.__reduce__()
+                  ^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\copyreg.py", line 76, in _reduce_ex
+    raise TypeError(f"cannot pickle {cls.__name__!r} object")
+TypeError: cannot pickle 'function' object
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 406, in _make_value_key
+    update_hash(
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 158, in update_hash
+    ch.update(hasher, val)
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 341, in update
+    b = self.to_bytes(obj)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 323, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 557, in _to_bytes
+    self.update(h, item)
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 341, in update
+    b = self.to_bytes(obj)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 323, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 554, in _to_bytes
+    raise UnhashableTypeError() from ex
+streamlit.runtime.caching.cache_errors.UnhashableTypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 174, in <module>
+    shap_explain(rf_model, X_sample)
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 92, in shap_explain
+    explainer = load_shap_explainer(model)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 168, in wrapper
+    return cached_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 197, in __call__
+    return self._get_or_create_cached_value(args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 211, in _get_or_create_cached_value
+    value_key = _make_value_key(
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 414, in _make_value_key
+    raise UnhashableParamError(cache_type, func, arg_name, arg_value, exc)
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 406, in _make_value_key
+    update_hash(
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 158, in update_hash
+    ch.update(hasher, val)
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 341, in update
+    b = self.to_bytes(obj)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 323, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 557, in _to_bytes
+    self.update(h, item)
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 341, in update
+    b = self.to_bytes(obj)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 323, in to_bytes
+    b = b"%s:%s" % (tname, self._to_bytes(obj))
+                           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\streamlit\runtime\caching\hashing.py", line 554, in _to_bytes
+    raise UnhashableTypeError() from ex
+streamlit.runtime.caching.cache_errors.UnhashableParamError: Cannot hash argument 'model' (of type `sklearn.ensemble._forest.RandomForestRegressor`) in 'load_shap_explainer'.
+
+To address this, you can tell Streamlit not to hash this argument by adding a
+leading underscore to the argument's name in the function signature:
+
+```
+@st.cache_resource
+def load_shap_explainer(_model, ...):
+    ...
+```
+            
+2025-10-15 23:18:26,679 - [INFO] - App started.
+2025-10-15 23:18:26,690 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-15 23:18:29,284 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:18:36,046 - [INFO] - App started.
+2025-10-15 23:18:40,553 - [INFO] - App started.
+2025-10-15 23:18:51,427 - [INFO] - App started.
+2025-10-15 23:18:54,541 - [INFO] - App started.
+2025-10-15 23:18:56,172 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:18:56,654 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:18:56,813 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:19:17,715 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:19:17,727 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:25:51,637 - [INFO] - App started.
+2025-10-15 23:25:54,183 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:25:54,585 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-15 23:26:03,424 - [INFO] - App started.
+2025-10-15 23:26:04,762 - [INFO] - App started.
+2025-10-15 23:26:14,562 - [INFO] - App started.
+2025-10-15 23:26:19,830 - [INFO] - App started.
+2025-10-15 23:26:25,094 - [INFO] - App started.
+2025-10-15 23:26:28,308 - [INFO] - App started.
+2025-10-15 23:26:29,706 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:26:30,172 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:26:30,323 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:26:51,202 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:26:51,210 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:29:21,134 - [INFO] - App started.
+2025-10-15 23:29:23,271 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:29:23,627 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-15 23:29:31,622 - [INFO] - App started.
+2025-10-15 23:29:32,288 - [INFO] - App started.
+2025-10-15 23:29:38,332 - [INFO] - App started.
+2025-10-15 23:29:39,434 - [INFO] - App started.
+2025-10-15 23:29:41,509 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:29:42,001 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:29:42,167 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:30:03,053 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:30:03,067 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:30:30,047 - [ERROR] - SHAP computation failed:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 93, in shap_explain
+    shap_values = explainer(X_sample)
+                  ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_permutation.py", line 100, in __call__
+    return super().__call__(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_explainer.py", line 366, in __call__
+    row_result = self.explain_row(
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_permutation.py", line 162, in explain_row
+    outputs = fm(masks, zero_index=0, batch_size=batch_size)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\utils\_masked_model.py", line 57, in __call__
+    return self._delta_masking_call(masks, zero_index=zero_index, batch_size=batch_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\utils\_masked_model.py", line 209, in _delta_masking_call
+    outputs = self.model(*subset_masked_inputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\models\_model.py", line 23, in __call__
+    out = self.inner_model(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'RandomForestRegressor' object is not callable
+2025-10-15 23:32:30,456 - [INFO] - App started.
+2025-10-15 23:32:33,282 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:32:36,924 - [INFO] - App started.
+2025-10-15 23:32:36,976 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-15 23:32:47,158 - [INFO] - App started.
+2025-10-15 23:32:48,263 - [INFO] - App started.
+2025-10-15 23:32:58,069 - [INFO] - App started.
+2025-10-15 23:32:59,203 - [INFO] - App started.
+2025-10-15 23:33:01,270 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:33:01,725 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:33:01,868 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:33:22,731 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:33:22,750 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-15 23:33:50,705 - [ERROR] - SHAP computation failed:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 95, in shap_explain
+    shap_values = explainer.shap_values(X_sample)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_permutation.py", line 250, in shap_values
+    explanation = self(X, max_evals=npermutations * X.shape[1], main_effects=main_effects)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_permutation.py", line 100, in __call__
+    return super().__call__(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_explainer.py", line 366, in __call__
+    row_result = self.explain_row(
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\explainers\_permutation.py", line 162, in explain_row
+    outputs = fm(masks, zero_index=0, batch_size=batch_size)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\utils\_masked_model.py", line 57, in __call__
+    return self._delta_masking_call(masks, zero_index=zero_index, batch_size=batch_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\utils\_masked_model.py", line 209, in _delta_masking_call
+    outputs = self.model(*subset_masked_inputs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\shap\models\_model.py", line 23, in __call__
+    out = self.inner_model(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'RandomForestRegressor' object is not callable
+2025-10-15 23:35:20,112 - [INFO] - App started.
+2025-10-15 23:35:22,307 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-15 23:35:31,912 - [INFO] - App started.
+2025-10-15 23:35:32,892 - [INFO] - App started.
+2025-10-15 23:35:38,808 - [INFO] - App started.
+2025-10-15 23:35:40,192 - [INFO] - Starting predictions for uploaded file.
+2025-10-15 23:35:40,634 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:35:40,788 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-15 23:35:51,400 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-15 23:35:51,409 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:07:16,091 - [INFO] - App started.
+2025-10-16 00:07:16,734 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-16 00:07:16,863 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-16 00:07:21,816 - [INFO] - App started.
+2025-10-16 00:07:23,127 - [INFO] - App started.
+2025-10-16 00:07:25,800 - [INFO] - App started.
+2025-10-16 00:07:26,239 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 00:07:26,403 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:07:26,453 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:07:28,840 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 00:07:28,844 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:11:02,630 - [INFO] - SHAP feature importance plotted successfully (TreeExplainer mode).
+2025-10-16 00:13:53,817 - [INFO] - App started.
+2025-10-16 00:13:53,821 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-16 00:13:56,408 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-16 00:15:40,780 - [INFO] - App started.
+2025-10-16 00:15:41,796 - [INFO] - App started.
+2025-10-16 00:15:50,564 - [INFO] - App started.
+2025-10-16 00:15:51,956 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 00:15:52,407 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:15:52,548 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:16:13,396 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 00:16:13,407 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:25:46,611 - [INFO] - SHAP feature importance plotted successfully (TreeExplainer mode).
+2025-10-16 00:26:35,712 - [INFO] - App started.
+2025-10-16 00:26:35,722 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-16 00:26:38,158 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-16 00:28:02,025 - [INFO] - App started.
+2025-10-16 00:28:07,426 - [INFO] - App started.
+2025-10-16 00:28:09,633 - [INFO] - App started.
+2025-10-16 00:28:11,035 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 00:28:11,538 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:28:11,695 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:28:22,814 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 00:28:22,826 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:28:26,224 - [ERROR] - PERMUTATION computation failed:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 105, in explain_model
+    result = permutation_importance(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 208, in wrapper
+    validate_parameter_constraints(
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 98, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'y' parameter of permutation_importance must be an array-like or None. Got <bound method ForestRegressor.predict of RandomForestRegressor(min_samples_leaf=2, n_estimators=400, n_jobs=-1,
+                      random_state=42)> instead.
+2025-10-16 00:28:37,690 - [INFO] - App started.
+2025-10-16 00:28:42,655 - [INFO] - App started.
+2025-10-16 00:28:44,068 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 00:28:44,561 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:28:44,712 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:28:55,308 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 00:28:55,326 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:43:06,594 - [INFO] - SHAP explanation plotted successfully.
+2025-10-16 00:45:52,015 - [INFO] - App started.
+2025-10-16 00:45:56,634 - [INFO] - App started.
+2025-10-16 00:45:57,884 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 00:45:58,287 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:45:58,431 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 00:46:06,434 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 00:46:06,445 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 00:46:09,378 - [ERROR] - PERMUTATION computation failed:
+Traceback (most recent call last):
+  File "C:\Users\kunta\turbofan-rul\src\app_rul_streamlit.py", line 105, in explain_model
+    result = permutation_importance(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 208, in wrapper
+    validate_parameter_constraints(
+  File "C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\sklearn\utils\_param_validation.py", line 98, in validate_parameter_constraints
+    raise InvalidParameterError(
+sklearn.utils._param_validation.InvalidParameterError: The 'y' parameter of permutation_importance must be an array-like or None. Got <bound method ForestRegressor.predict of RandomForestRegressor(min_samples_leaf=2, n_estimators=400, n_jobs=-1,
+                      random_state=42)> instead.
+2025-10-16 01:03:14,374 - [INFO] - App started.
+2025-10-16 01:03:16,133 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-16 01:03:16,376 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-16 02:16:26,655 - [INFO] - App started.
+2025-10-16 02:16:29,051 - [INFO] - Models loaded successfully (RF, XGB, LSTM).
+2025-10-16 02:16:29,494 - [WARNING] - From C:\Users\kunta\turbofan-rul\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2025-10-16 02:23:27,466 - [INFO] - App started.
+2025-10-16 02:23:28,196 - [INFO] - App started.
+2025-10-16 02:23:48,982 - [INFO] - App started.
+2025-10-16 02:23:50,448 - [INFO] - Starting predictions for uploaded file.
+2025-10-16 02:23:50,946 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 02:23:51,114 - [INFO] - Predictions completed for 13096 samples (tree model).
+2025-10-16 02:24:01,873 - [INFO] - LSTM predictions completed for 13096 samples.
+2025-10-16 02:24:01,888 - [INFO] - Prediction complete and DataFrame updated with results.
+2025-10-16 02:29:53,742 - [INFO] - Permutation importance plotted successfully.
