@@ -22,7 +22,7 @@ if os.path.exists(SAMPLE_FLAG_PATH):
     st.markdown(
         """
         <div style='background-color:#FFF3CD;padding:10px;border-radius:10px;margin-bottom:15px;'>
-            <h4 style='color:#856404;margin:0;'>🚀 Demo Mode Active</h4>
+            <h4 style='color:#856404;margin:0;'>Demo Mode Active</h4>
             <p style='color:#856404;margin:0;'>
             The app is running with sample data for demonstration purposes.<br>
             Upload the full FD001_test.csv file locally to view complete results.
@@ -37,7 +37,7 @@ if "demo" in st.session_state.get("model_mode", "demo"):
     st.markdown(
         """
         <div style='background-color:#D1E7DD;padding:10px;border-radius:10px;margin-bottom:15px;'>
-            <h4 style='color:#0F5132;margin:0;'>🧠 Using Demo Models</h4>
+            <h4 style='color:#0F5132;margin:0;'> Using Demo Models</h4>
             <p style='color:#0F5132;margin:0;'>
             The app is using lightweight demo models (Random Forest, XGBoost, LSTM).<br>
             For full accuracy, run locally with your trained models in <code>/models/</code>.
