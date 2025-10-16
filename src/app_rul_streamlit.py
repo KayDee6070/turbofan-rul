@@ -25,10 +25,19 @@ logger.info("App started.")
 
 # ---------------- CONSTANTS ----------------
 TRAIN_META_PATH = "data/processed/FD001_train_features.csv"
-_train_head = pd.read_csv(TRAIN_META_PATH, nrows=1)
+
+import os
+
+if os.path.exists(TRAIN_META_PATH):
+    _train_head = pd.read_csv(TRAIN_META_PATH, nrows=1)
+else:
+    st.warning("⚠️ Training metadata not found. Using default placeholder features.")
+    # Create a dummy header so the app doesn't crash
+    dummy_cols = [f"s{i}" for i in range(1, 21)]
+    _train_head = pd.DataFrame(columns=["unit", "cycle", "RUL"] + dummy_cols)
+
 TREE_FEATURE_COLS = [c for c in _train_head.columns if c not in {"unit", "cycle", "RUL"}]
-LSTM_FEATS = ["s4_mean5", "s9_mean5", "s11_mean5", "s9_mean20", "s14_mean20"]
-SEQ_LEN = 30
+
 
 # ---------------- MODEL LOADING ----------------
 @st.cache_resource
@@ -83,7 +92,9 @@ def plot_feature_importance(model, title):
     st.pyplot(fig)
     plt.close(fig)
 
-# ---------------- SHAP & PERMUTATION EXPLAINABILITY ----------------
+# ---------------- SHAP EXPLAINABILITY ----------------
+from sklearn.inspection import permutation_importance
+
 from sklearn.inspection import permutation_importance
 
 def explain_model(model, X_sample, method="shap"):
@@ -103,54 +114,46 @@ def explain_model(model, X_sample, method="shap"):
                 logger.info("SHAP explanation plotted successfully.")
 
             else:
-                # --- FAST PERMUTATION IMPORTANCE (top 20 features only) ---
-                st.write("Using top 20 most important features for faster computation...")
-
-                # Select top 20 important features from the RandomForest model
-                top_feats = pd.Series(model.feature_importances_, index=X_sample.columns)
-                top_feats = top_feats.sort_values(ascending=False).head(20).index
-
-                # Compute model predictions as pseudo-targets
+                # Permutation importance using model predictions as pseudo-targets
                 y_pred = model.predict(X_sample)
-
-                # Run permutation importance on top 20 features only
                 result = permutation_importance(
-                    model,
-                    X_sample[top_feats],
-                    y_pred,
-                    n_repeats=3,        # fewer repeats = faster
-                    random_state=42,
-                    n_jobs=-1
+                    model, X_sample, y_pred,
+                    n_repeats=5, random_state=42, n_jobs=-1
                 )
 
-                # Build DataFrame of feature importances
                 importances = pd.DataFrame({
-                    "Feature": X_sample[top_feats].columns,
+                    "Feature": X_sample.columns,
                     "Importance": result.importances_mean
-                }).sort_values("Importance", ascending=False)
+                }).sort_values("Importance", ascending=False).head(15)
 
-                # Plot bar chart
                 fig, ax = plt.subplots()
                 sns.barplot(x="Importance", y="Feature", data=importances, ax=ax)
                 ax.set_title("Permutation-Based Feature Importance (Fast Mode)")
                 st.pyplot(fig)
                 plt.close(fig)
-
-                st.success("✅ Permutation feature importance computed successfully (fast mode).")
-                logger.info("Permutation importance plotted successfully (fast mode).")
+                st.success("✅ Permutation feature importance computed.")
+                logger.info("Permutation importance plotted successfully.")
 
         except Exception as e:
             st.error(f"{method.upper()} computation failed: {str(e)}")
             logger.exception(f"{method.upper()} computation failed:")
 
-
 # ---------------- SIDEBAR ----------------
+# ---------------- FILE UPLOAD OR DEFAULT SAMPLE ----------------
 uploaded_file = st.sidebar.file_uploader("Upload processed test data", type=["csv"])
-compare_models = st.sidebar.checkbox("Compare All Models", value=True)
-explain_method = st.sidebar.radio(
-    "Select Explainability Method",
-    ("SHAP (accurate, slower)", "Permutation (fast, fallback)")
-)
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.success("✅ Uploaded file loaded successfully.")
+else:
+    st.warning("⚠️ No file uploaded. Loading sample test data instead.")
+    sample_path = "data/processed/sample_test.csv"
+    if os.path.exists(sample_path):
+        df = pd.read_csv(sample_path)
+        st.info("Using sample_test.csv (5 rows) for demo purposes.")
+    else:
+        st.error("❌ No sample file found. Please upload FD001_test.csv manually.")
+        st.stop()
 
 
 # ---------------- MAIN ----------------
