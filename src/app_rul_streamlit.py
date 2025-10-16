@@ -32,6 +32,34 @@ if os.path.exists(SAMPLE_FLAG_PATH):
         unsafe_allow_html=True
     )
 
+# ---------------- MODEL MODE BANNER ----------------
+if "demo" in st.session_state.get("model_mode", "demo"):
+    st.markdown(
+        """
+        <div style='background-color:#D1E7DD;padding:10px;border-radius:10px;margin-bottom:15px;'>
+            <h4 style='color:#0F5132;margin:0;'>🧠 Using Demo Models</h4>
+            <p style='color:#0F5132;margin:0;'>
+            The app is using lightweight demo models (Random Forest, XGBoost, LSTM).<br>
+            For full accuracy, run locally with your trained models in <code>/models/</code>.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    st.markdown(
+        """
+        <div style='background-color:#CFE2FF;padding:10px;border-radius:10px;margin-bottom:15px;'>
+            <h4 style='color:#084298;margin:0;'>✅ Using Real Models</h4>
+            <p style='color:#084298;margin:0;'>
+            The app loaded real trained models from <code>/models/</code>.<br>
+            Results reflect true performance metrics.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 # ---------------- LOGGING ----------------
 logging.basicConfig(
