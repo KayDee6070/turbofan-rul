@@ -217,6 +217,8 @@ if uploaded_file is not None:
 else:
     st.warning("⚠️ No file uploaded. Loading sample test data instead.")
     sample_path = "data/processed/sample_test.csv"
+    st.write("🔍 Using sample file at:", sample_path)
+
     if os.path.exists(sample_path):
         df = pd.read_csv(sample_path)
         st.info("Using sample_test.csv (5 rows) for demo purposes.")
@@ -227,10 +229,44 @@ else:
 
 # ---------------- MAIN ----------------
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.subheader("Preview of uploaded data")
-    st.dataframe(df.head())
+    with st.spinner("📂 Loading uploaded data..."):
+        try:
+            df = pd.read_csv(uploaded_file)
+            if df.empty:
+                st.error("⚠️ The uploaded CSV appears to be empty. Please upload a valid dataset.")
+                st.stop()
+            st.success("✅ Uploaded file loaded successfully.")
+            st.subheader("Preview of uploaded data")
+            st.dataframe(df.head())
+        except pd.errors.EmptyDataError:
+            st.error("⚠️ The uploaded file is empty or not a valid CSV format.")
+            st.stop()
+        except Exception as e:
+            st.error(f"❌ Error reading uploaded file: {str(e)}")
+            st.stop()
 
+else:
+    st.warning("⚠️ No file uploaded. Loading sample test data instead.")
+    sample_path = "data/processed/sample_test.csv"
+    if os.path.exists(sample_path):
+        try:
+            with st.spinner("📂 Loading sample data..."):
+                df = pd.read_csv(sample_path)
+                if df.empty:
+                    st.error("⚠️ The sample_test.csv file is empty. Please re-upload a valid sample file.")
+                    st.stop()
+                st.info("Using sample_test.csv (5 rows) for demo purposes.")
+                st.subheader("Preview of demo data")
+                st.dataframe(df.head())
+        except Exception as e:
+            st.error(f"❌ Failed to load sample_test.csv: {str(e)}")
+            st.stop()
+    else:
+        st.error("❌ No sample file found. Please upload FD001_test.csv manually.")
+        st.stop()
+
+# Continue only if df exists and valid
+if "df" in locals():
     if "unit" in df.columns:
         engine_ids = sorted(df["unit"].unique())
         selected_engine = st.sidebar.selectbox("Select Engine Unit ID", engine_ids)
@@ -240,7 +276,7 @@ if uploaded_file is not None:
 
     if st.button("Run Prediction"):
         try:
-            logger.info("Starting predictions for uploaded file.")
+            logger.info("Starting predictions for file.")
             preds_rf = predict_tree(df, rf_model)
             preds_xgb = predict_tree(df, xgb_model)
             preds_lstm = predict_lstm(df)
@@ -249,7 +285,7 @@ if uploaded_file is not None:
             df["Pred_XGB"] = preds_xgb
             df["Pred_LSTM"] = preds_lstm
 
-            st.success("Prediction complete.")
+            st.success("✅ Prediction complete.")
             logger.info("Prediction complete and DataFrame updated with results.")
 
             # --- Model comparison summary ---
@@ -289,7 +325,7 @@ if uploaded_file is not None:
             st.subheader("Feature Importance (Random Forest)")
             plot_feature_importance(rf_model, "Random Forest - Top 15 Features")
 
-            # --- SHAP explainability ---
+            # --- Model explainability ---
             if explain_method:
                 st.subheader("Model Explainability (Random Forest)")
                 X_sample = df[TREE_FEATURE_COLS].sample(n=min(200, len(df)), random_state=42)
@@ -297,7 +333,6 @@ if uploaded_file is not None:
                     explain_model(rf_model, X_sample, method="shap")
                 else:
                     explain_model(rf_model, X_sample, method="permutation")
-
 
             # --- Download predictions ---
             csv = df.to_csv(index=False).encode("utf-8")
@@ -310,7 +345,4 @@ if uploaded_file is not None:
 
         except Exception as e:
             logger.exception("Error during prediction:")
-            st.error(f"An error occurred: {str(e)}")
-
-else:
-    st.info("Upload the processed FD001_test_features.csv file to start analysis.")
+            st.error(f"❌ An error occurred: {str(e)}")
