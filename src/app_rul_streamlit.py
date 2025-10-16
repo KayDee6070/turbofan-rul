@@ -13,6 +13,25 @@ from sklearn.preprocessing import StandardScaler
 # ---------------- CONFIG ----------------
 st.set_page_config(page_title="NASA Turbofan RUL Dashboard", layout="wide")
 st.title("NASA Turbofan Engine Remaining Useful Life (RUL) Prediction")
+# ---------------- DEMO MODE BANNER ----------------
+import os
+
+SAMPLE_FLAG_PATH = "data/processed/sample_test.csv"
+
+if os.path.exists(SAMPLE_FLAG_PATH):
+    st.markdown(
+        """
+        <div style='background-color:#FFF3CD;padding:10px;border-radius:10px;margin-bottom:15px;'>
+            <h4 style='color:#856404;margin:0;'>🚀 Demo Mode Active</h4>
+            <p style='color:#856404;margin:0;'>
+            The app is running with sample data for demonstration purposes.<br>
+            Upload the full FD001_test.csv file locally to view complete results.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 # ---------------- LOGGING ----------------
 logging.basicConfig(
