@@ -61,13 +61,35 @@ TREE_FEATURE_COLS = [c for c in _train_head.columns if c not in {"unit", "cycle"
 # ---------------- MODEL LOADING ----------------
 @st.cache_resource
 def load_models():
-    rf = load("models/FD001_rf.joblib")
-    xgb = load("models/FD001_xgb.joblib")
-    lstm = load_model("models/FD001_lstm.h5", compile=False)
-    logger.info("Models loaded successfully (RF, XGB, LSTM).")
-    return rf, xgb, lstm
+    """Load real models if available, otherwise use lightweight demo models."""
+    try:
+        rf = load("models/FD001_rf.joblib")
+        xgb_model = load("models/FD001_xgb.joblib")
+        lstm = load_model("models/FD001_lstm.h5", compile=False)
+        logger.info("✅ Loaded real models (RF, XGB, LSTM).")
+    except Exception as e:
+        st.warning("⚠️ Real models not found. Loading demo models instead.")
+        logger.warning(f"Falling back to demo models: {e}")
 
-rf_model, xgb_model, lstm_model = load_models()
+        # Create and load tiny fallback models (for Streamlit Cloud demo)
+        from sklearn.ensemble import RandomForestRegressor
+        import xgboost as xgb
+        import numpy as np
+        import tensorflow as tf
+
+        X = np.random.rand(30, 5)
+        y = np.random.rand(30)
+
+        rf = RandomForestRegressor(n_estimators=5, random_state=42)
+        rf.fit(X, y)
+
+        xgb_model = xgb.XGBRegressor(n_estimators=5, random_state=42)
+        xgb_model.fit(X, y)
+
+        lstm = tf.keras.Sequential([tf.keras.layers.Dense(1, input_shape=(5,))])
+
+    return rf, xgb_model, lstm
+
 
 # ---------------- FUNCTIONS ----------------
 def predict_tree(df, model):
