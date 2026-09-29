@@ -17,3 +17,8 @@ models/
 # Ignore virtual environment and cache
 .venv/
 __pycache__/
+
+# Runtime logs and the zipped copy of archive/ (same 15 files, extracted)
+app.log
+*.log
+archive.zip
